@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hackathon Arcade</title>
+
+  <!-- Fonts from Google Fonts. style.css decides where each one is used. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- =====================================================
+       HTML: the structure of the site.
+       - The top bar is always visible.
+       - Every screen is one <section>. JavaScript shows one and hides the rest.
+       - Any element with data-go="screen-id" is a button that opens that screen.
+       ===================================================== -->
+
+  <!-- TOP BAR (visible on every screen) -->
+  <header class="topbar">
+    <button class="brand" data-go="screen-arcade">
+      <span class="brand-dot"></span> Hackathon Arcade
+    </button>
+    <nav>
+      <button class="nav-link" data-go="screen-catch-intro">Neon Catch</button>
+      <button class="nav-link" data-go="screen-decision-intro">Decision Machine</button>
+    </nav>
+    <span id="player-badge" class="badge" hidden></span>
+  </header>
+
+
+  <!-- ============ SCREEN 1: ARCADE (home) ============ -->
+  <section id="screen-arcade" class="screen">
+
+    <!-- Hero: the first thing people see -->
+    <div class="hero">
+      <div class="hero-text">
+        <p class="tag">Individual hackathon collection, 2026</p>
+        <h1>Hackathon<br><span>Arcade</span></h1>
+        <p class="lead">
+          Two short experiments about how people respond. One tests how quickly you can
+          track a moving target. The other looks at how you choose when there is no right answer.
+        </p>
+        <button class="btn primary" data-go="screen-catch-intro">Play Neon Catch</button>
+        <button class="btn" data-go="screen-decision-intro">Try the Decision Machine</button>
+      </div>
+
+      <!-- A small pixel world, drawn by fillScene() in app.js -->
+      <div class="scene" data-scene="home" aria-hidden="true"></div>
+    </div>
+
+    <!-- Quick facts. The scenario number is filled in by JavaScript. -->
+    <div class="strip">
+      <div class="strip-item"><strong>8</strong><span>Projects in the arcade</span></div>
+      <div class="strip-item"><strong>2</strong><span>Different experiments</span></div>
+      <div class="strip-item"><strong id="stat-scenarios">30</strong><span>Decision scenarios</span></div>
+      <div class="strip-item"><strong>2 min</strong><span>Or less per run</span></div>
+    </div>
+
+    <!-- The two experiments explained -->
+    <div class="section">
+      <h2>Reflexes or reasoning?</h2>
+      <p class="section-note">Every project in the arcade is built on one of these two ideas.</p>
+
+      <div class="two-col">
+        <article class="box box-cyan">
+          <h3>Neon Catch</h3>
+          <p>
+            Follow a glowing circle for 20 seconds and click it before it jumps. The speed never changes,
+            so your score shows how steady you stay, not how you cope with a speed-up.
+          </p>
+          <ul>
+            <li>10 points for every hit</li>
+            <li>Clicking empty space counts as a miss</li>
+            <li>Your best score is saved on this device</li>
+          </ul>
+          <button class="btn small" data-go="screen-catch-intro">Open Neon Catch</button>
+        </article>
+
+        <article class="box box-pink">
+          <h3>Human Decision Machine</h3>
+          <p>
+            Face six everyday situations with four ways to respond to each. There are no right answers.
+            The machine counts which of seven habits you used most and explains the pattern.
+          </p>
+          <ul>
+            <li>Six random situations every run</li>
+            <li>Seven habits tracked, from risk to adaptability</li>
+            <li>Ends with a profile and a list of your choices</li>
+          </ul>
+          <button class="btn small" data-go="screen-decision-intro">Open the Decision Machine</button>
+        </article>
+      </div>
+    </div>
+
+    <!-- The 8 project cards. JavaScript builds them into this box. -->
+    <div class="section">
+      <h2>Choose a project</h2>
+      <p class="section-note">Seven reaction projects and one decision project. Pick any card to start.</p>
+      <div id="cards" class="cards"></div>
+    </div>
+
+    <!-- How it works: a real sequence, so numbered steps make sense -->
+    <div class="section">
+      <h2>How it works</h2>
+      <div class="steps">
+        <article class="step">
+          <h3>Choose a project</h3>
+          <p>Each card opens one of the two experiments, so you always know where you are.</p>
+        </article>
+        <article class="step">
+          <h3>Play it through</h3>
+          <p>Only what the game needs is recorded: your clicks, or the options you pick. Nothing leaves your browser.</p>
+        </article>
+        <article class="step">
+          <h3>Read your result</h3>
+          <p>You get a score and accuracy from Neon Catch, or a habit profile from the Decision Machine.</p>
+        </article>
+      </div>
+    </div>
+
+    <footer>
+      <span>Hackathon Arcade, an interactive experiment collection</span>
+      <span>Built with HTML, CSS, JavaScript and the DOM</span>
+      <span>&copy; Dilip Kumar 2026</span>
+    </footer>
+  </section>
+
+
+  <!-- ============ SCREEN 2: NEON CATCH INTRO ============ -->
+  <section id="screen-catch-intro" class="screen" hidden>
+    <p class="tag">Reaction experiment</p>
+    <h2 class="page-title">Neon Catch</h2>
+
+    <div class="split">
+      <div class="box">
+        <h3>How to play</h3>
+        <ol>
+          <li>Press <b>Start round</b>. A glowing circle appears in the play area.</li>
+          <li>Click or tap the circle before it jumps. Each hit gives you 10 points.</li>
+          <li>Clicking empty space counts as a miss, so aim carefully.</li>
+          <li>After 20 seconds you see your score, accuracy and best streak.</li>
+        </ol>
+        <p class="small">
+          The circle jumps at the same pace all round. That keeps the result about steadiness,
+          not about a difficulty curve that keeps rising.
+        </p>
+        <button id="btn-catch-start" class="btn primary">Start round</button>
+        <button class="btn" data-go="screen-arcade">Back to arcade</button>
+      </div>
+
+      <div class="tiles">
+        <div class="tile"><strong>20 s</strong><span>Round length</span></div>
+        <div class="tile"><strong>+10</strong><span>Points per hit</span></div>
+        <div class="tile"><strong>0.85 s</strong><span>Time between jumps</span></div>
+        <div class="tile gold"><strong id="best-score">--</strong><span>Your best score</span></div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="note"><b>What is recorded</b>Hits, misses, your longest streak and your score for the round.</div>
+      <div class="note"><b>Tip</b>Keep your eyes on the middle of the box. It helps you reach any corner faster.</div>
+    </div>
+  </section>
+
+
+  <!-- ============ SCREEN 3: NEON CATCH GAME ============ -->
+  <section id="screen-catch-play" class="screen" hidden>
+    <div class="game-head">
+      <div>
+        <p class="tag">20 second round</p>
+        <h2 class="page-title">Neon Catch</h2>
+      </div>
+      <div class="stats">
+        <div class="stat">Time <strong id="catch-time">20</strong></div>
+        <div class="stat">Score <strong id="catch-score">0</strong></div>
+        <div class="stat">Hits <strong id="catch-hits">0</strong></div>
+        <div class="stat">Misses <strong id="catch-misses">0</strong></div>
+        <div class="stat">Streak <strong id="catch-streak">0</strong></div>
+      </div>
+    </div>
+
+    <!-- Time bar: JavaScript changes the width of the inner part -->
+    <div class="time-bar"><div id="time-fill"></div></div>
+
+    <!-- The play area. The target moves inside it. -->
+    <div id="arena">
+      <span class="arena-label">Click the glowing circle</span>
+      <button id="target" aria-label="Target"></button>
+    </div>
+
+    <div class="game-foot">
+      <span class="small">The circle moves at the same pace all round. Accuracy is hits divided by all clicks.</span>
+      <button class="btn small" data-go="screen-arcade">Exit</button>
+    </div>
+  </section>
+
+
+  <!-- ============ SCREEN 4: NEON CATCH RESULT ============ -->
+  <section id="screen-catch-result" class="screen" hidden>
+    <p class="tag">Round complete</p>
+    <h2 class="page-title">Target locked</h2>
+    <p id="catch-headline" class="lead"></p>
+
+    <div class="strip">
+      <div class="strip-item gold"><strong id="res-score">0</strong><span>Score</span></div>
+      <div class="strip-item"><strong id="res-hits">0</strong><span>Hits</span></div>
+      <div class="strip-item"><strong id="res-misses">0</strong><span>Misses</span></div>
+      <div class="strip-item"><strong id="res-streak">0</strong><span>Best streak</span></div>
+    </div>
+
+    <div class="split">
+      <div class="box">
+        <h3 id="res-rating"></h3>
+        <p id="res-accuracy"></p>
+        <div class="bar"><div id="res-accuracy-bar" class="bar-fill"></div></div>
+        <p id="res-tip" class="small"></p>
+        <button id="btn-catch-again" class="btn primary">Play again</button>
+        <button class="btn" data-go="screen-arcade">Back to arcade</button>
+      </div>
+
+      <div>
+        <div class="note"><b>What this run shows</b>How reliably you found the target during one fixed 20-second round.</div>
+        <div class="note"><b>What it does not show</b>Intelligence, personality or your permanent reaction speed. One round is a small sample.</div>
+        <div class="note"><b>Your best score</b><span id="res-best"></span></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============ SCREEN 5: DECISION MACHINE INTRO ============ -->
+  <section id="screen-decision-intro" class="screen" hidden>
+    <p class="tag">Decision experiment</p>
+    <h2 class="page-title">Human Decision Machine</h2>
+    <div class="scene short" data-scene="intro" aria-hidden="true"></div>
+
+    <div class="split">
+      <div class="box">
+        <h3>What happens</h3>
+        <p>
+          You will see six short situations. Each one has four possible ways to respond,
+          and none of them is correct. After your sixth choice, the machine shows which habits
+          appeared most often and what that combination looks like.
+        </p>
+        <ol>
+          <li>Read the situation.</li>
+          <li>Pick the option closest to what you would really do.</li>
+          <li>Read the short comment, then move on.</li>
+          <li>Get your habit profile at the end.</li>
+        </ol>
+        <div class="name-entry">
+          <label for="player-name">Player name</label>
+          <input id="player-name" maxlength="12" autocomplete="off" placeholder="Type your name">
+          <p id="greet" class="greet">Hello, traveler! What should I call you?</p>
+          <p id="name-error" class="error" hidden>Type a name first (up to 12 characters), then press Start.</p>
+        </div>
+        <button id="btn-decision-start" class="btn primary">Start adventure</button>
+        <button class="btn" data-go="screen-arcade">Back to arcade</button>
+      </div>
+
+      <div class="tiles">
+        <div class="tile"><strong>6</strong><span>Situations per run</span></div>
+        <div class="tile"><strong>4</strong><span>Options each</span></div>
+        <div class="tile"><strong>7</strong><span>Habits tracked</span></div>
+        <div class="tile pink"><strong id="intro-scenarios">30</strong><span>Scenarios in the pool</span></div>
+      </div>
+    </div>
+
+    <h3 class="sub-title">The seven habits it looks for</h3>
+    <div id="habit-grid" class="habit-grid"></div>
+
+    <p class="note">
+      <b>Good to know</b>This is a fun interactive model. It is not a psychological test and it cannot predict how you will act.
+    </p>
+  </section>
+
+
+  <!-- ============ SCREEN 6: DECISION MACHINE QUESTIONS ============ -->
+  <section id="screen-decision-play" class="screen" hidden>
+    <div class="game-head">
+      <div>
+        <p class="tag" id="decision-progress"></p>
+        <h2 class="page-title" id="decision-title"></h2>
+      </div>
+      <button class="btn small" data-go="screen-arcade">Exit</button>
+    </div>
+
+    <div class="time-bar"><div id="decision-fill"></div></div>
+    <div class="scene" data-scene="play" aria-hidden="true"></div>
+
+    <div class="box scenario">
+      <p class="speaker"><span id="play-name"></span> &#9656; Narrator</p>
+      <div id="dialog" class="dialog" title="Click to skip"><p id="decision-situation" class="situation"></p><span class="more">&#9660;</span></div>
+      <div id="choices" hidden></div>
+      <p id="decision-feedback" class="feedback"></p>
+    </div>
+    <p class="small">Click the text to skip ahead. The seven habits stay hidden until the final result.</p>
+  </section>
+
+
+  <!-- ============ SCREEN 7: DECISION MACHINE RESULT ============ -->
+  <section id="screen-decision-result" class="screen" hidden>
+    <p class="tag">Quest complete</p>
+    <div class="scene short" data-scene="result" aria-hidden="true"></div>
+    <p id="result-player" class="tag"></p>
+    <h2 id="result-name" class="profile-name"></h2>
+    <p id="result-line" class="lead"></p>
+    <div id="result-chips" class="chips"></div>
+
+    <div class="split">
+      <div class="box">
+        <h3>Your habits</h3>
+        <p class="small">How many points each habit earned across your six choices. The top two are gold.</p>
+        <div id="bars"></div>
+      </div>
+
+      <div>
+        <div class="box">
+          <h3>What stood out</h3>
+          <ul id="observations"></ul>
+        </div>
+        <div class="box box-pink">
+          <h3>Try this next</h3>
+          <p id="result-tip"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3 id="journey-title">Your choices, one by one</h3>
+      <ul id="journey"></ul>
+    </div>
+
+    <p class="note">
+      <b>Interpretation boundary</b>This report only reflects the choices made in this run. It is not a diagnosis,
+      an intelligence measure, a fixed personality label or a prediction of future behaviour.
+    </p>
+
+    <button id="btn-decision-again" class="btn primary">Play again</button>
+    <button class="btn" data-go="screen-decision-intro">Change player</button>
+    <button class="btn" data-go="screen-arcade">Back to arcade</button>
+  </section>
+
+
+  <!-- Shown only if something is wrong (for example scenarios.js is missing) -->
+  <p id="error-box" class="error" hidden></p>
+
+  <!-- JAVASCRIPT. scenarios.js comes first because app.js uses its data. -->
+  <script src="scenarios.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
