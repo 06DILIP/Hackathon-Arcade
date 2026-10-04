@@ -248,7 +248,7 @@ function makeGoer(screenId) {
 
 var CATCH_SECONDS = 20;      // round length
 var TARGET_SIZE = 70;        // must match #target width in CSS
-var JUMP_MS = 850;           // the target jumps every 0.85 seconds
+var JUMP_MS = 1350;           // the target jumps every 0.85 seconds
 
 var game = null;             // holds score, hits, misses, streak, time
 var clockTimer = null;       // the 1-second countdown
